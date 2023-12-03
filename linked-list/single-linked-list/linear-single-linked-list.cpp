@@ -109,18 +109,23 @@ void insertAtBeforeNode(int nodeData, int data)
     }
     node *after = head;
     node *prev = NULL;
-    while (after->data != nodeData)
+    while (after->next != head)
     {
         prev = after;
         after = after->next;
+        if (after->data == nodeData)
+        {
+            node *temp = getNode();
+            temp->data = data;
+            temp->next = after;
+            prev->next = temp;
+            prev = NULL;
+            after = NULL;
+            temp = NULL;
+            return;
+        }
     }
-    node *temp = getNode();
-    temp->data = data;
-    temp->next = after;
-    prev->next = temp;
-    prev = NULL;
-    after = NULL;
-    temp = NULL;
+    std::cout << "\nElement not found";
 }
 void insertAtAfterNode(int nodeData, int data)
 {
@@ -131,54 +136,119 @@ void insertAtAfterNode(int nodeData, int data)
     }
 
     node *p = head;
-    while (p->data != nodeData)
+    if (head->next == NULL)
     {
+        insertAtEnd(data);
+        return;
+    }
+
+    while (p->next != NULL)
+    {
+        
+        if (p->data == nodeData)
+        {
+            node *temp = new node();
+            temp->data = data;
+            temp->next = p->next;
+            p->next = temp;
+            p = NULL;
+            temp = NULL;
+            return;
+        }
         p = p->next;
     }
-    node *temp = new node();
-    temp->data = data;
-    temp->next = p->next->next;
-    p->next = temp;
-    p = NULL;
-    temp = NULL;
+    std::cout<<"\nNode not found";
 }
-void deleteAtBegin(){
-    if(head ==NULL){
-        std::cout<<"List Empty";
-        return ;
+void deleteAtBegin()
+{
+    if (head == NULL)
+    {
+        std::cout << "List Empty";
+        return;
     }
-    node* p = head;
+    node *p = head;
     head = head->next;
-    delete(p); 
-    p=NULL;
+    delete (p);
+    p = NULL;
 }
-void deleteAtEnd(){
-    if(head ==NULL){
-       std::cout<<"List Empty";
-        return ;   
+void deleteAtEnd()
+{
+    if (head == NULL)
+    {
+        std::cout << "List Empty";
+        return;
     }
-    if(head->next ==NULL){
+    if (head->next == NULL)
+    {
         delete head;
-        head = NULL;  
-        return ;
+        head = NULL;
+        return;
     }
-    
-        node* after = head ;
-        node* prev = NULL;
-        while(after->next!=NULL){
-            prev = after;
-            after= after->next;
 
+    node *after = head;
+    node *prev = NULL;
+    while (after->next != NULL)
+    {
+        prev = after;
+        after = after->next;
+    }
+    prev->next = NULL;
+    delete after;
+    after = NULL;
+    prev = NULL;
+}
+void deleteAtPos(int pos)
+{
+    if (pos < 0)
+    {
+        std::cout << "\ninvalid position";
+        return;
+    }
+    if (pos == 0)
+    {
+        deleteAtBegin();
+        return;
+    }
+    int k = 1;
+    node *after = head;
+    node *prev = NULL;
+    while (after->next != NULL)
+    {
+
+        prev = after;
+        after = after->next;
+        if (k == pos)
+        {
+            prev->next = after->next;
+            delete after;
+            after = NULL;
+            prev = NULL;
+            return;
         }
-        prev->next = NULL;
-        delete after;
-        after=NULL;
-        prev = NULL;
-    
+        k++;
+    }
+    std::cout << "\nInvalid position";
+}
+void reverse()
+{
+    if (head == NULL || head->next == NULL)
+    {
+        return;
+    }
+    node *p = NULL, *q = NULL, *r = head;
+    while (r != NULL)
+    {
+        q = r->next;
+        r->next = p;
+        p = r;
+        r = q;
+    }
+    head = p;
+    p = NULL;
 }
 int main()
 {
-    
+
     insertAtEnd(99);
     insertAtEnd(115);
     insertAtEnd(34);
@@ -190,9 +260,12 @@ int main()
     display();
     insertAtAfterNode(99, 22);
     display();
-    deleteAtBegin();
-    display();
-    deleteAtEnd();
-    display();
-   
+    // deleteAtBegin();
+    // display();
+    // deleteAtEnd();
+    // display();
+    // deleteAtPos(4);
+    // display();
+    // reverse();
+    // display();
 }
